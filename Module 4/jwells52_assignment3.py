@@ -67,3 +67,4 @@ if __name__ == "__main__":
     lemma_tokens = tokens.apply(lambda x: [lem.lemmatize(token) for token in x])
 
     write_results(sentences, tokens, stemmed_tokens, lemma_tokens)
+    
