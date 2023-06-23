@@ -18,9 +18,9 @@ RESULT_INDICES = [
 ] # Indices where there is a big change in tokens when lemmatization or stemming is applied
 
 def write_results(
-          _sentences, 
-          _tokens, 
-          _stemmed_tokens, 
+          _sentences,
+          _tokens,
+          _stemmed_tokens,
           _lemma_tokens):
     '''Function for writing results of tokenization, stemming, and lemmatization to .txt file'''
     results_file = '/output/results.txt'
@@ -67,4 +67,3 @@ if __name__ == "__main__":
     lemma_tokens = tokens.apply(lambda x: [lem.lemmatize(token) for token in x])
 
     write_results(sentences, tokens, stemmed_tokens, lemma_tokens)
-    
