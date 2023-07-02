@@ -161,7 +161,8 @@ if __name__ == '__main__':
     print('Label encoding...')
     df_encoded = df_binned.copy()
     df_encoded.loc[:, cat_cols] = df_encoded[cat_cols].apply(LabelEncoder().fit_transform)
-
+    
+    # Step 3: Standard Scaling
     print('Standard scaling...')
     df_scaled = df_encoded.copy()
     df_scaled = pd.DataFrame(StandardScaler().fit_transform(df_scaled), columns=df_encoded.columns)
@@ -181,9 +182,3 @@ if __name__ == '__main__':
     sig_dict = get_significant_results(df, df_binned)
     for col in sig_dict:
         save_result_histograms(df[col], df_binned[col])
-    
-
-
-
-
-
