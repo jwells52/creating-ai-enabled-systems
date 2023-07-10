@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 def generate_train_validation(
         df: pd.DataFrame,
-        split=0.2, 
+        split=0.2,
         random_state=42,
         threshold=None,
     ):
