@@ -28,3 +28,17 @@ class HumpbackWhaleDataset(FewShotDataset):
 
     def get_labels(self):
         return self.labels['Id'].values
+
+def remove_new_whale_class(df: pd.DataFrame):
+  _df = df.copy()
+  return _df[_df['Id'] != 'new_whale']
+
+def filter_low_occuring_classes(df:pd.DataFrame, threshold:int=10):
+  def class_count(df, label):
+    return len(df[df['Id'] == label])
+
+  _df = df.copy()
+  _df['class_count'] = _df['Id'].apply(lambda label: class_count(_df, label))
+  _df = _df[_df['class_count'] > threshold]
+
+  return _df
