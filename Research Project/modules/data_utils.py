@@ -42,3 +42,32 @@ def filter_low_occuring_classes(df:pd.DataFrame, threshold:int=10):
   _df = _df[_df['class_count'] > threshold]
 
   return _df
+
+
+def create_loaders(train_set, valid_set, n_way, n_shot, n_query, n_tasks_training, n_tasks_validation, num_workers=2):
+    
+  train_sampler = TaskSampler(
+      train_set, n_way=n_way, n_shot=n_shot, n_query=n_query, n_tasks=n_tasks_training
+  )
+
+  valid_sampler = TaskSampler(
+      valid_set, n_way=n_way, n_shot=n_shot, n_query=n_query, n_tasks=n_tasks_validation
+  )
+
+  train_loader = DataLoader(
+      train_set,
+      batch_sampler=train_sampler,
+      num_workers=num_workers,
+      pin_memory=True,
+      collate_fn=train_sampler.episodic_collate_fn
+  )
+
+  valid_loader = DataLoader(
+      valid_set,
+      batch_sampler=valid_sampler,
+      num_workers=num_workers,
+      pin_memory=True,
+      collate_fn=valid_sampler.episodic_collate_fn
+  )
+
+  return train_loader, valid_loader
