@@ -81,23 +81,23 @@ def train_fsl(
   train_losses = []
   valid_accs = []
   for epoch in range(n_epochs):
-      print(f"Epoch {epoch+1}")
+      print(f"\nEpoch {epoch+1}", end='')
       epoch_loss = training_epoch(model, train_loader, optimizer, loss_fn)
       train_losses += [epoch_loss]
+      if valid_loader is not None:
+        valid_acc = evaluate(
+            model, valid_loader, device=device, tqdm_prefix="Validation"
+        )
 
-      valid_acc = evaluate(
-          model, valid_loader, device=device, tqdm_prefix="Validation"
-      )
+        if valid_acc > best_valid_acc:
+            best_valid_acc = valid_acc
+            best_state = model.state_dict()
+            
+            if save_model:
+              print(f'Best performing model, saving state to {save_path}')
+              torch.save(model.state_dict, save_path)
 
-      if valid_acc > best_valid_acc:
-          best_valid_acc = valid_acc
-          best_state = model.state_dict()
-          
-          if save_model:
-            print(f'Best performing model, saving state to {save_path}')
-            torch.save(model.state_dict, save_path)
-
-      valid_accs += [valid_acc]
+        valid_accs += [valid_acc]
 
       optimizer.step()
   
