@@ -1,8 +1,8 @@
 import torch
 
-class PrototypicalNetworksLocal(torch.nn.Module):
+class PrototypicalNetwork(torch.nn.Module):
     def __init__(self, backbone: torch.nn.Module):
-        super(PrototypicalNetworksLocal, self).__init__()
+        super(PrototypicalNetwork, self).__init__()
         self.backbone = backbone
 
     def forward(
