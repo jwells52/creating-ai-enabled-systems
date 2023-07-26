@@ -2,6 +2,8 @@ import os
 import pandas as pd
 from PIL import Image
 from easyfsl.datasets import FewShotDataset
+from easyfsl.samplers import TaskSampler
+from torch.utils.data import DataLoader
 
 class HumpbackWhaleDataset(FewShotDataset):
     def __init__(self, image_dir: str, labels: pd.DataFrame, transform=None):
