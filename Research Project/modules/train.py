@@ -80,8 +80,9 @@ def train_fsl(
 
   train_losses = []
   valid_accs = []
+  best_valid_acc = 0.0
   for epoch in range(n_epochs):
-      print(f"\nEpoch {epoch+1}", end='')
+      print(f"\nEpoch {epoch+1}", end=' ')
       epoch_loss = training_epoch(model, train_loader, optimizer, loss_fn)
       train_losses += [epoch_loss]
       if valid_loader is not None:
