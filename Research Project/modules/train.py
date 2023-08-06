@@ -19,13 +19,6 @@ torch.backends.cudnn.benchmark = False
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-transform = transforms.Compose(
-  [
-        transforms.Grayscale(num_output_channels=3),
-        transforms.Resize((256, 512)),
-        transforms.ToTensor(),
-  ])
-
 def training_epoch(
   model: FewShotClassifier,
   data_loader: DataLoader,
@@ -99,7 +92,7 @@ def train_fsl(
             
             if save_model:
               print(f'Best performing model, saving state to {save_path}')
-              torch.save(model.state_dict, save_path)
+              torch.save(model.state_dict(), save_path)
 
         valid_accs += [valid_acc]
 
@@ -107,6 +100,6 @@ def train_fsl(
   
   if save_path:
     print(f'Saving state of model checkpoint at last epoch to {save_path}_last_epoch')
-    torch.save(model.state_dict, save_path+'_last_epoch')
+    torch.save(model.state_dict(), save_path+'_last_epoch')
   
   return train_losses, valid_accs
