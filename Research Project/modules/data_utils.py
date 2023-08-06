@@ -1,9 +1,17 @@
 import os
+import cv2
 import pandas as pd
 from PIL import Image
 from easyfsl.datasets import FewShotDataset
 from easyfsl.samplers import TaskSampler
 from torch.utils.data import DataLoader
+from torchvision.transforms import transforms
+
+transform = transforms.Compose(
+  [
+        transforms.Resize((256, 512)),
+        transforms.ToTensor(),
+  ])
 
 class HumpbackWhaleDataset(FewShotDataset):
     def __init__(self, image_dir: str, labels: pd.DataFrame, transform=None):
@@ -19,12 +27,17 @@ class HumpbackWhaleDataset(FewShotDataset):
     def __getitem__(self, idx: int):
         item = self.labels.iloc[idx]
         image_name, label = item['Image'], self.label_to_id[item['Id']]
-
         image_path = os.path.join(self.image_dir, image_name)
-        image = Image.open(image_path)
 
+        image = cv2.imread(image_path)
+        num_channels = image.shape[2]
+
+        image = Image.fromarray(image)
         if self.transform is not None:
-            image = self.transform(image)
+          if num_channels != 3:
+            gs_transform = transforms.Grayscale(num_output_channels=3)
+            image = gs_transform(image)
+          image = self.transform(image)
 
         return image, label
 
@@ -53,11 +66,11 @@ def create_loader(dataset, n_way, n_shot, n_query, n_tasks, num_workers=2):
   )
 
   loader = DataLoader(
-      train_set,
+      dataset,
       batch_sampler=sampler,
       num_workers=num_workers,
       pin_memory=True,
-      collate_fn=train_sampler.episodic_collate_fn
+      collate_fn=sampler.episodic_collate_fn
   )
 
   return loader
