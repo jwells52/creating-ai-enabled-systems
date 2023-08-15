@@ -2,18 +2,16 @@ import os
 import cv2
 import pandas as pd
 from PIL import Image
-from easyfsl.datasets import FewShotDataset
-from easyfsl.samplers import TaskSampler
-from torch.utils.data import DataLoader
-from torchvision.transforms import transforms
 
-transform = transforms.Compose(
-  [
-        transforms.Resize((256, 512)),
-        transforms.ToTensor(),
-  ])
+from easyfsl.datasets import FewShotDataset
+from easyfsl.methods import TaskSampler
+from torch.utils.data import DataLoader
+
 
 class HumpbackWhaleDataset(FewShotDataset):
+    '''
+    Pytorch dataset for loading the Humpback Whale Identification Kaggle dataset
+    '''
     def __init__(self, image_dir: str, labels: pd.DataFrame, transform=None):
         self.image_dir = image_dir
         self.labels = labels
@@ -45,18 +43,18 @@ class HumpbackWhaleDataset(FewShotDataset):
         return self.labels['Id'].values
 
 def remove_new_whale_class(df: pd.DataFrame):
-  _df = df.copy()
-  return _df[_df['Id'] != 'new_whale']
+    _df = df.copy()
+    return _df[_df['Id'] != 'new_whale']
 
 def filter_low_occuring_classes(df:pd.DataFrame, threshold:int=10):
-  def class_count(df, label):
-    return len(df[df['Id'] == label])
+    def class_count(df, label):
+        return len(df[df['Id'] == label])
 
-  _df = df.copy()
-  _df['class_count'] = _df['Id'].apply(lambda label: class_count(_df, label))
-  _df = _df[_df['class_count'] > threshold]
+    _df = df.copy()
+    _df['class_count'] = _df['Id'].apply(lambda label: class_count(_df, label))
+    _df = _df[_df['class_count'] > threshold]
 
-  return _df
+    return _df
 
 
 def create_loader(dataset, n_way, n_shot, n_query, n_tasks, num_workers=2):
