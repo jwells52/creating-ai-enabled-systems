@@ -8,7 +8,6 @@ from easyfsl.samplers import TaskSampler
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 
-
 class HumpbackWhaleDataset(FewShotDataset):
     '''
     EasyFSL FewShotDataset class for loading the Humpback Whale Identification Kaggle dataset.
@@ -35,10 +34,10 @@ class HumpbackWhaleDataset(FewShotDataset):
 
         image = Image.fromarray(image)
         if self.transform is not None:
-          if num_channels != 3:
-            gs_transform = transforms.Grayscale(num_output_channels=3)
-            image = gs_transform(image)
-          image = self.transform(image)
+            if num_channels != 3:
+                gs_transform = transforms.Grayscale(num_output_channels=3)
+                image = gs_transform(image)
+            image = self.transform(image)
 
         return image, label
 

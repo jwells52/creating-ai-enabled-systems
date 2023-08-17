@@ -2,7 +2,7 @@ import random
 import torch
 import numpy as np
 
-from easyfsl.methods import FewShotClassifier, PrototypicalNetworks, RelationNetworks, MatchingNetworks
+from easyfsl.methods import FewShotClassifier
 from easyfsl.datasets import FewShotDataset
 from easyfsl.utils import evaluate
 from tqdm import tqdm
@@ -11,8 +11,16 @@ from torch.optim import Optimizer, SGD, Adam
 from torch.utils.data import DataLoader
 from torchvision.models import resnet18
 from torchvision.models.feature_extraction import create_feature_extractor
+from torchvision.transforms import transforms
 
 from modules.data_utils import create_loader
+
+transform = transforms.Compose(
+  [
+        transforms.Resize((256, 512)),
+        transforms.ToTensor()
+  ])
+
 
 random_seed = 0
 np.random.seed(random_seed)
