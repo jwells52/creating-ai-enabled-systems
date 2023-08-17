@@ -6,11 +6,14 @@ from PIL import Image
 from easyfsl.datasets import FewShotDataset
 from easyfsl.methods import TaskSampler
 from torch.utils.data import DataLoader
+from torchvision.transforms import transforms
 
 
 class HumpbackWhaleDataset(FewShotDataset):
     '''
-    Pytorch dataset for loading the Humpback Whale Identification Kaggle dataset
+    EasyFSL FewShotDataset class for loading the Humpback Whale Identification Kaggle dataset.
+
+    Note that FewShotDataset inherits torch.utils.data.Dataset and this class is essentially a PyTorch dataset object.
     '''
     def __init__(self, image_dir: str, labels: pd.DataFrame, transform=None):
         self.image_dir = image_dir
@@ -43,10 +46,16 @@ class HumpbackWhaleDataset(FewShotDataset):
         return self.labels['Id'].values
 
 def remove_new_whale_class(df: pd.DataFrame):
+    '''
+    Helper function for removing all images with new_whale class as ID in dataframe
+    '''
     _df = df.copy()
     return _df[_df['Id'] != 'new_whale']
 
-def filter_low_occuring_classes(df:pd.DataFrame, threshold:int=10):
+def filter_low_occuring_classes(df: pd.DataFrame, threshold:int=10):
+    '''
+    Helper function for removing classes with number of examples less than specified threshold
+    '''
     def class_count(df, label):
         return len(df[df['Id'] == label])
 
@@ -56,19 +65,38 @@ def filter_low_occuring_classes(df:pd.DataFrame, threshold:int=10):
 
     return _df
 
+def create_loader(
+        dataset: FewShotDataset,
+        n_way: int,
+        n_shot: int,
+        n_query: int,
+        n_tasks: int, 
+        num_workers: int=2
+    ):
+    '''
+    Helper Function for creating PyTorch dataloader for n-way n-shot learning tasks with n_query size query set
 
-def create_loader(dataset, n_way, n_shot, n_query, n_tasks, num_workers=2):
+    Arguments:
+        dataset (easyfsl.FewShotDataset): Few Shot Dataset (essentially a PyTorch dataset) of dataset wanting to be loaded
+        n_way (int): Number of classes in support set
+        n_shot (int): Number of examples each class has in the support set
+        n_query (int): Number of examples in query set
+        n_task (int): Number of tasks
     
-  sampler = TaskSampler(
-      dataset, n_way=n_way, n_shot=n_shot, n_query=n_query, n_tasks=n_tasks
-  )
+    Returns:
+        loader (torch.data.utils.Dataloader): PyTorch dataloader for loading meta-learning tasks
+    '''
+    
+    sampler = TaskSampler(
+        dataset, n_way=n_way, n_shot=n_shot, n_query=n_query, n_tasks=n_tasks
+    )
 
-  loader = DataLoader(
-      dataset,
-      batch_sampler=sampler,
-      num_workers=num_workers,
-      pin_memory=True,
-      collate_fn=sampler.episodic_collate_fn
-  )
+    loader = DataLoader(
+        dataset,
+        batch_sampler=sampler,
+        num_workers=num_workers,
+        pin_memory=True,
+        collate_fn=sampler.episodic_collate_fn
+    )
 
-  return loader
+    return loader
