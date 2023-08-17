@@ -4,7 +4,7 @@ import pandas as pd
 from PIL import Image
 
 from easyfsl.datasets import FewShotDataset
-from easyfsl.methods import TaskSampler
+from easyfsl.samplers import TaskSampler
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 

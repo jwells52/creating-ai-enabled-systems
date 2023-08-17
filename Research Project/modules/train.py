@@ -2,8 +2,7 @@ import random
 import torch
 import numpy as np
 
-from easyfsl.methods import PrototypicalNetworks, RelationNetworks, MatchingNetworks
-from easyfsl.methods import FewShotClassifier
+from easyfsl.methods import FewShotClassifier, PrototypicalNetworks, RelationNetworks, MatchingNetworks
 from easyfsl.datasets import FewShotDataset
 from easyfsl.utils import evaluate
 from tqdm import tqdm
