@@ -12,17 +12,16 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from PIL import Image
 from torchvision.models import resnet18
+from torchvision.transforms import Grayscale
 from typing import List, Dict
 
-print('Loading Prototypical Network...')
-cnn = resnet18()
-cnn.fc = torch.nn.Flatten()
 
-model = PrototypicalNetworks(cnn).to('cpu')
-model.load_state_dict(
-  torch.load('/workspaces/creating-ai-enabled-systems/Research Project/models/checkpoints/prototypical_network_5-way_5-shot_last_epoch', map_location=torch.device('cpu'))
-)
-print('finished!')
+from modules.train import load_prototypical_network_checkpoint
+
+MODEL_CHECKPOINT_PATH = '/workspaces/creating-ai-enabled-systems/Research Project/models/checkpoints/prototypical_network_5-way_5-shot_last_epoch'
+
+model = load_prototypical_network_checkpoint(MODEL_CHECKPOINT_PATH, send_to_device=False, map_location=torch.device('cpu'))
+
 
 class Task(BaseModel):
     '''
@@ -32,15 +31,22 @@ class Task(BaseModel):
     support_set_images: Dict[str, List[str]]
     query_set_images: List[str]
 
-def load_image_from_bytes(im_b64):
+def load_image_from_bytes(im_b64_str):
     '''
     Load image base64 encoded string into a numpy array
     '''
     # convert it into bytes
-    img_bytes = base64.b64decode(im_b64.encode('utf-8'))
+    start_index = len('data:image/jpeg;base64,')
+    img_bytes = base64.b64decode(im_b64_str[start_index:])
 
     # convert bytes data to PIL Image object
     img = Image.open(io.BytesIO(img_bytes))
+
+    img = img.resize((256, 512))
+
+    if len(img.size) != 3:
+        grayscale_transform = Grayscale(num_output_channels=3)
+        img = grayscale_transform(img)
 
     # PIL image object to numpy array
     img_arr = np.asarray(img)

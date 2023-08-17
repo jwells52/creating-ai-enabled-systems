@@ -1,5 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, State, callback
 import dash_bootstrap_components as dbc
+import requests
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -143,7 +144,7 @@ def add_support_class(n_clicks):
     return styles
 
 @callback(
-    Output("classes_selected_div", "children"),
+    Output("support-labels", "data"),
     [Input(f"label_input_class{i}", "value") for i in range(5)])
 def update_support_labels(*vals):
     
@@ -182,8 +183,6 @@ def update_support_set_images(*contents):
         support_set_dict
     )
 
-    print(len(items))
-
     return items
 
 @callback(
@@ -197,7 +196,7 @@ def update_query_set_images(image_b64_str_list):
     displays = []
     if image_b64_str_list is not None:
         displays = display_images(image_b64_str_list)
-    
+
     return displays, image_b64_str_list
 
 @callback(
@@ -207,17 +206,22 @@ def update_query_set_images(image_b64_str_list):
     State('support-images-dict', 'data'),
     State('query-images-list', 'data')
 )
-def get_classify_results(n_clicks, support_labels, support_images, query_images):
-    print('hey')
-    print(support_labels)
+def get_classify_results(_, support_labels, support_images, query_images):
+    '''
+    TODO: FILL ME IN
+    '''
     if support_images is not None and support_labels is not None and query_images is not None:
-        print(f'support_set_labels: {support_labels}')
-        print('support_set_images: ')
-        for set_label, set_images in support_images.items():
-            print(f'  {set_label}: {" ".join([s[:50] for s in set_images])}')
-        print('query_set_images: ')
-        for img in query_images:
-            print(f'  {img[:50]}')
+        support_images = {k:v for k,v in support_images.items() if v is not None}
+        support_images = {support_labels[int(idx)]: v for idx, v in support_images.items()}
+
+        post_body = {
+            "support_set_labels": support_labels,
+            "support_set_images": support_images,
+            "query_set_images": query_images
+        }
+
+        resp = requests.post('http://127.0.0.1:8000/classify', json = post_body, timeout=1000)
+        print(resp.json())
 
 if __name__ == '__main__':
     app.run(debug=True)
