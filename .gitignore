@@ -1,7 +1,10 @@
-Research Project/data/test
-Research Project/data/train
-Research Project/data/sample_submission.csv
-Research Project/data/train.csv
+Research Paper/data/test
+Research Paper/data/train
+Research Paper/data/sample_submission.csv
+Research Paper/data/train.csv
 
 Module 5/cars.csv
 output/
+
+*__pycache__*
+*.vscode*
