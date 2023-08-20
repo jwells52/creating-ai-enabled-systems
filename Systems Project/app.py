@@ -223,6 +223,7 @@ def get_classify_results(_, support_labels, support_images, query_images):
 
         resp = requests.post('http://127.0.0.1:8000/classify', json = post_body, timeout=1000)
         predicted_labels = resp.json()
+        
         return html.Div([
                         html.Hr(),
                         html.H1('Prediction Results'),

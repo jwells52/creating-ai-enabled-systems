@@ -1,0 +1,13 @@
+
+dash
+dash-bootstrap-components
+easyfsl
+fastapi
+matplotlib
+numpy
+opencv-python-headless
+pandas
+Pillow
+torch
+torchvision
+uvicorn
