@@ -49,7 +49,7 @@ def create_support_class_card(idx):
                 [
                     dbc.Row(
                         [
-                            dcc.Input(id=f"label_input_class{idx}", type="text", placeholder="Enter Class ID"),
+                            dcc.Input(id=f"label_input_class{idx}", type="text", placeholder="Enter class label"),
                             html.Div(create_upload_component(f'class{idx}-card', f'upload-images-{idx}')),
                             dbc.Row(id=f'support-set-images-upload-{idx}'),
                         ], style={'display': 'flex', 'align-content': 'stretch', 'justify-content': 'flex-start', 'align-items': 'center'}
@@ -118,7 +118,6 @@ app.layout = html.Div(
                         ], style={'display': 'inline-flex'}
                     )
                 ]),
-                html.Hr(),
                 dbc.Row(dbc.Button('Classify query images', id='classify-button'), style={'padding-left': '10px'}),
                 dbc.Row(id='classify-results')
             ]
@@ -226,9 +225,10 @@ def get_classify_results(_, support_labels, support_images, query_images):
         predicted_labels = resp.json()
         return html.Div([
                         html.Hr(),
-                        html.H1('Results'),
+                        html.H1('Prediction Results'),
                         dbc.Row(
-                        [
+                        [  
+                            dbc.Card(dbc.CardBody(
                             dbc.Col(
                                 children=[
                                     dbc.Row(
@@ -246,8 +246,8 @@ def get_classify_results(_, support_labels, support_images, query_images):
                                     dbc.Row(
                                         html.Div(f'Predicted Label: {image_label}')
                                     )
-                                ]
-                            )
+                                ], style={'padding-right': '5px'}
+                            )))
                             for image_str, image_label in zip(query_images, list(predicted_labels.values())[0])
                         ], style={'display':'flex'})
                 ])
