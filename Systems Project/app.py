@@ -21,17 +21,17 @@ def create_upload_component(component_div_id, upload_div_id):
                         [
                             'Drag and Drop or ',
                             html.A('Select Files')
-                        ]
+                        ], style={'margin-left': '10px', 'margin-right': '10px'}
                     ),
                     style={
-                        'width': '100%',
                         'height': '60px',
                         'lineHeight': '60px',
                         'borderWidth': '1px',
                         'borderStyle': 'dashed',
                         'borderRadius': '5px',
                         'textAlign': 'center',
-                        'margin': '10px'
+                        'margin': '10px',
+                        'display': 'inline-flex'
                     },
                     # Allow multiple files to be uploaded
                     multiple=True
@@ -47,13 +47,13 @@ def create_support_class_card(idx):
         [
             dbc.CardBody(
                 [
-                    html.P(
-                        f"Upload images of individual whale for class #{idx}",
-                        className="card-text",
+                    dbc.Row(
+                        [
+                            dcc.Input(id=f"label_input_class{idx}", type="text", placeholder="Enter Class ID"),
+                            html.Div(create_upload_component(f'class{idx}-card', f'upload-images-{idx}')),
+                            dbc.Row(id=f'support-set-images-upload-{idx}'),
+                        ], style={'display': 'flex', 'align-content': 'stretch', 'justify-content': 'flex-start', 'align-items': 'center'}
                     ),
-                    dcc.Input(id=f"label_input_class{idx}", type="text", placeholder="Enter Class ID"),
-                    create_upload_component(f'class{idx}-card', f'upload-images-{idx}'),
-                    dbc.Row(id=f'support-set-images-upload-{idx}'),
                 ]
             ),
         ],
@@ -105,19 +105,21 @@ app.layout = html.Div(
                         ),
                     ]
                 ),
-                dbc.Row(
+                html.Hr(),
+                dbc.Row([
+                    html.H4('Upload Query Images'),
                     dbc.Col(
                         children=[
-                            html.H4('Upload Query Images'),
                             create_upload_component(
                                 'query-images-div', 
                                 'upload-query-images'
                             ),
                             dbc.Row(id='query-images-output')
-                        ]
+                        ], style={'display': 'inline-flex'}
                     )
-                ),
-                dbc.Row(dbc.Button('Classify query images', id='classify-button')),
+                ]),
+                html.Hr(),
+                dbc.Row(dbc.Button('Classify query images', id='classify-button'), style={'padding-left': '10px'}),
                 dbc.Row(id='classify-results')
             ]
         )
@@ -221,7 +223,35 @@ def get_classify_results(_, support_labels, support_images, query_images):
         }
 
         resp = requests.post('http://127.0.0.1:8000/classify', json = post_body, timeout=1000)
-        print(resp.json())
+        predicted_labels = resp.json()
+        return html.Div([
+                        html.Hr(),
+                        html.H1('Results'),
+                        dbc.Row(
+                        [
+                            dbc.Col(
+                                children=[
+                                    dbc.Row(
+                                        html.Img(
+                                            src=image_str,
+                                            style = {
+                                                'height': '60px',
+                                                'width': '120px',
+                                                'float': 'left',
+                                                'position': 'relative',
+                                                'padding': 5,
+                                            }
+                                        )
+                                    ),
+                                    dbc.Row(
+                                        html.Div(f'Predicted Label: {image_label}')
+                                    )
+                                ]
+                            )
+                            for image_str, image_label in zip(query_images, list(predicted_labels.values())[0])
+                        ], style={'display':'flex'})
+                ])
+        
 
 if __name__ == '__main__':
     app.run(debug=True)
