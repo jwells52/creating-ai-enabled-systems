@@ -23,7 +23,7 @@ def write_results(
           _stemmed_tokens,
           _lemma_tokens):
     '''Function for writing results of tokenization, stemming, and lemmatization to .txt file'''
-    results_file = '/output/results.txt'
+    results_file = '/assignment_code/output/results.txt'
 
     print(f'Writing results to {results_file}...')
     with open(results_file, "w", encoding="utf8") as f:

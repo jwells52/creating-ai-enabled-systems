@@ -19,7 +19,3 @@ if __name__ == '__main__':
     # # convert bytes data to PIL Image object
     img = Image.open(io.BytesIO(img_bytes))
     img = img.save("test.jpg")
-
-    # # PIL image object to numpy array
-    # img_arr = np.asarray(img)      
-    # print('img shape', img_arr.shape)
