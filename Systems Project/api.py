@@ -4,23 +4,45 @@ FastAPI for model inference using Prototypical Networks
 import base64
 import torch
 import io
+import os
 import sys
-sys.path.append('../Research Paper/')
 import numpy as np
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 from PIL import Image
 from torchvision.transforms import Grayscale
+from torchvision.models import resnet18
+from easyfsl.methods import PrototypicalNetworks
 from typing import List, Dict
 
+device = 'cpu'
 
-from modules.train import load_prototypical_network_checkpoint
 
-MODEL_CHECKPOINT_PATH = '/workspaces/creating-ai-enabled-systems/Systems Project/models/prototypical_network_5-way_5-shot_last_epoch'
+MODEL_CHECKPOINT_PATH = os.environ['MODEL_CHECKPOINT_PATH']
 
-model = load_prototypical_network_checkpoint(MODEL_CHECKPOINT_PATH, send_to_device=False, map_location=torch.device('cpu'))
 
+def load_prototypical_network_checkpoint(savepath, send_to_device=False, map_location=None):
+    '''
+    Load Prototypical Network from PyTorch checkpoint file.
+    '''
+    cnn = resnet18()
+    cnn.fc = torch.nn.Flatten()
+
+    pt_network = PrototypicalNetworks(cnn)
+    if map_location is None:
+        pt_network.load_state_dict(
+            torch.load(savepath)
+        )
+    else:
+        pt_network.load_state_dict(
+            torch.load(savepath, map_location=map_location)
+        )
+
+    if send_to_device:
+        pt_network = pt_network.to(device)
+
+    return pt_network
 
 class Task(BaseModel):
     '''
@@ -73,6 +95,7 @@ def load_query_set_images_from_bytes(query_set_images_b64_strs):
 
     return query_set_images
 
+model = load_prototypical_network_checkpoint(MODEL_CHECKPOINT_PATH, send_to_device=False, map_location=torch.device('cpu'))
 app = FastAPI()
 
 @app.post("/classify")

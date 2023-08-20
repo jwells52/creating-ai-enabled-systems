@@ -255,4 +255,4 @@ def get_classify_results(_, support_labels, support_images, query_images):
         
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
