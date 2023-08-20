@@ -5,8 +5,25 @@ from PIL import Image
 
 from easyfsl.datasets import FewShotDataset
 from easyfsl.samplers import TaskSampler
+from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
+
+def load_image(
+    image_filename,
+    image_dir='/workspaces/creating-ai-enabled-systems/Research Paper/data/train'
+):
+    '''
+    Function for loading image when given an image filename and directory the image exists in.
+    '''
+    image_path = os.path.join(image_dir, image_filename)
+    image = cv2.imread(image_path)
+
+    num_channels = image.shape[2]
+
+    image = Image.fromarray(image)
+
+    return image, num_channels
 
 class HumpbackWhaleDataset(FewShotDataset):
     '''
@@ -27,12 +44,8 @@ class HumpbackWhaleDataset(FewShotDataset):
     def __getitem__(self, idx: int):
         item = self.labels.iloc[idx]
         image_name, label = item['Image'], self.label_to_id[item['Id']]
-        image_path = os.path.join(self.image_dir, image_name)
 
-        image = cv2.imread(image_path)
-        num_channels = image.shape[2]
-
-        image = Image.fromarray(image)
+        image, num_channels = load_image(image_name, self.image_dir)
         if self.transform is not None:
             if num_channels != 3:
                 gs_transform = transforms.Grayscale(num_output_channels=3)
@@ -63,6 +76,32 @@ def filter_low_occuring_classes(df: pd.DataFrame, threshold:int=10):
     _df = _df[_df['class_count'] > threshold]
 
     return _df
+
+def generate_train_validation(
+        df: pd.DataFrame,
+        split=0.2,
+        random_state=42,
+        threshold=None,
+    ):
+    '''
+    Function for generating csv files that list the classes and images that will be used for
+    training and validation sets. Test set is not creating because that is provided by the Kaggle Dataset.
+    '''
+    if threshold is not None:
+        df = df[df['class_count'] > threshold]
+    
+    y = df['Id'].unique()
+
+    y_train, y_val = train_test_split(y, test_size=split, random_state=random_state)
+
+    train_set = df[df['Id'].isin(y_train)]
+    valid_set = df[df['Id'].isin(y_val)]
+
+    train_savepath = f'training_{threshold}samples.csv' if threshold is not None else 'training.csv'
+    valid_savepath = f'validation_{threshold}samples.csv' if threshold is not None else 'validation.csv'
+
+    train_set.to_csv(train_savepath, index=False)
+    valid_set.to_csv(valid_savepath, index=False)
 
 def create_loader(
         dataset: FewShotDataset,
