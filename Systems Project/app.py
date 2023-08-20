@@ -52,7 +52,7 @@ def create_support_class_card(idx):
                             dcc.Input(id=f"label_input_class{idx}", type="text", placeholder="Enter class label"),
                             html.Div(create_upload_component(f'class{idx}-card', f'upload-images-{idx}')),
                             dbc.Row(id=f'support-set-images-upload-{idx}'),
-                        ], style={'display': 'flex', 'align-content': 'stretch', 'justify-content': 'flex-start', 'align-items': 'center'}
+                        ], style={'display': 'flex', 'align-content': 'stretch', 'justify-content': 'flex-start', 'align-items': 'center', 'padding-left': '10px'}
                     ),
                 ]
             ),
@@ -88,26 +88,26 @@ app.layout = html.Div(
         dcc.Store(id='support-labels', storage_type='session'),
         dcc.Store(id='support-images-dict', storage_type='session'),
         dcc.Store(id='query-images-list', storage_type='session'),
-        html.Header("Humpback Whale Identification with Few Shot Learning",
-                    style={'text-align': 'center', 'font-weight': 'bold'}),
+        html.H1("Humpback Whale Identification with Few Shot Learning",
+                    style={'text-align': 'center', 'font-weight': 'bold', 'background': 'aliceblue'}),
         html.Div(id='classes_selected_div', style={'display': 'none'}),
         html.Div(
             children=[
                 dbc.Row(
                     children=[
-                        html.H4('Upload Support Images'),
+                        html.H3('Upload Support Images'),
                         dbc.Col(
                             html.Div(children=[create_support_class_card(i) for i in range(5)]),
                             style={'max-width': '95%'}
                         ),
                         dbc.Col(
-                            html.Button('Add Support Class', id='add-class', n_clicks=0)
+                            html.Button('Add Support Class', id='add-class', n_clicks=0), style={'padding-left': '10px'}
                         ),
                     ]
                 ),
                 html.Hr(),
                 dbc.Row([
-                    html.H4('Upload Query Images'),
+                    html.H3('Upload Query Images'),
                     dbc.Col(
                         children=[
                             create_upload_component(
