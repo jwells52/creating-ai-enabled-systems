@@ -1,12 +1,13 @@
 '''
 FastAPI for model inference using Prototypical Networks
 '''
-import torch
 import base64
+import torch
 import io
 import sys
 sys.path.append('../Research Paper/')
 import numpy as np
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from PIL import Image
@@ -16,7 +17,7 @@ from typing import List, Dict
 
 from modules.train import load_prototypical_network_checkpoint
 
-MODEL_CHECKPOINT_PATH = '/workspaces/creating-ai-enabled-systems/Research Paper/models/checkpoints/prototypical_network_5-way_5-shot_last_epoch'
+MODEL_CHECKPOINT_PATH = '/workspaces/creating-ai-enabled-systems/Systems Project/models/prototypical_network_5-way_5-shot_last_epoch'
 
 model = load_prototypical_network_checkpoint(MODEL_CHECKPOINT_PATH, send_to_device=False, map_location=torch.device('cpu'))
 
