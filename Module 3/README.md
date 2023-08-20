@@ -5,7 +5,7 @@
 2. Apply data engineering techniques to prepare computer vision and time series data for AI algorithms.
 3. Setup GitHu and Docker for course assignments.
 
-## Assignment
+## Assignment 2
 ### Creating GitHub and Docker repo
 First, a GitHub and Docker repo are required to be created for holding all the coursework done in this class. If you are seeing this README then it can be assumed you have access to my GitHub repo. The Docker repository that will hold containerized versions of each assignment can be accessed [here](https://hub.docker.com/repository/docker/jwells52/creating-ai-enabled-systems/general). Docker images of every programming assignment in this class will exist in this Docker repo, and each Docker image will have a standard naming convention: `jwells52/creating-ai-enabled-systems:assignmentX` where X is the number of the assignment. For example, this module has programming assignment labelled as Assignment 2, so the Docker image for this assignment is `jwells52/creating-ai-enabled-systems:assigment2`.
 

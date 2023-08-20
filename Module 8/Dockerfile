@@ -1,8 +1,8 @@
 FROM python:3.9.13-slim
 
-WORKDIR /assignment4
+WORKDIR /assignment8
 
-ADD . /assignment4
+ADD . /assignment8
 
 RUN pip install -r requirements.txt
 

@@ -3,3 +3,4 @@ notebook
 numpy
 pandas
 scikit-learn
+tqdm

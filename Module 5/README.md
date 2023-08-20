@@ -1,19 +1,25 @@
-# Programming Assignment 4
+# Module 5 - Data Engineering for Categorical Data
 
-### Prerequisites
-Create a folder called 'outputs' in a working directory. 
-For steps define below please refer to the path of this folder as `/path/to/working/directory/output`
+## Objectives
+1. Describe the different types of categorical data.
+2. Apply data engineering techniques to prepare categorical data for AI algorithms.
+3. Perform operations such as transforming to **nominal data**, **one-hot-encoding**, and **imputation**.
 
-### How to run
-1. Run the following command `docker pull jwells51/creating-ai-enabled-systems:assignment4` to pull image containing assignment code
-2. Run the following command `docker run -it -v /path/to/working/directory/output:/output/ jwells51/creating-ai-enabled-systems:assignment4`
+## Assignment 4
+The goal of this assignment is to transform the categorical features in the [Kaggle used car dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) so that they can be processed by a deep neural network. For this assignment a jupyter notebook or python script can be submitted. I have written both a jupyter notebook and python script, however, it is recommended to use the jupyter notebook for inspecting the results of this assignment, and the steps for running the code will reference the jupyter notebook and **not** the python script.
 
-### Results
-You can find results of assignment code in the folder` /path/to/working/directory/output`
+Another requirement of the assignment is to submit an excel sheet that contains at least two types of data failures, the solutions to fixing them, and advantages/disadvantages to the solutions. The excel sheet I submitted for this assignment can be accessed [here](./jwells52_DataFailureTemplate.xlsx).
 
-The following files that will exist in there after runnning
-- cars-preprocessed.csv - CSV file containing preprocessed data
-- manufacturer_name_hists.png - Plots of histograms before and after binning for the `manufacturer_name` column
-- manufacturer_name_levels_binned.txt - Text file containing the levels of the `manufacturer_name` column that were binned to a new level labeled 'other'
-- model_name_hists.png - Plots of histograms before and after for the `model_name` column
-- model_name_levels_binned.txt - Text file containing the levels of the `model_name` column that were binned to a new level labeled 'other'
+#### Steps for running the code for this assignment
+***From source - NOT RECOMMNEDED - run these commands in your terminal/command prompt***
+1. `cd Module 5`
+2. `pip install -r requirements.txt`
+3. `jupyter notebook --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''`
+4. In your browser, open `localhost:8888`
+5. Open `jwells52_assignment4.ipynb`
+
+***From Docker - RECOMMENDED***
+1. `docker pull jwells52/creating-ai-enabled-systems:assignment4`
+2. `docker run -it -p 8888:8888 jwells52/creating-ai-enabled-systems:assignment4`
+3. In your browser, open `localhost:8888`
+4. Open `jwells52_assignment4.ipynb`
