@@ -8,5 +8,5 @@ This system project is essentially just a web interface and REST API. Right now,
 ## Run the system project
 A docker-compose.yml file was created so that the system can be ran with virtually one command. Execute the following command to run the system project locally.
 
-`cd Systems\ Project/` \
+`cd Systems\ Project/application` \
 `docker compose up`
