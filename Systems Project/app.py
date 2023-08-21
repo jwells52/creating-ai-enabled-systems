@@ -1,6 +1,8 @@
 from dash import Dash, dcc, html, Input, Output, State, callback
 import dash_bootstrap_components as dbc
 import requests
+import os
+API_HOST = os.environ.get('API_HOST', '127.0.0.1')
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -221,14 +223,14 @@ def get_classify_results(_, support_labels, support_images, query_images):
             "query_set_images": query_images
         }
 
-        resp = requests.post('http://127.0.0.1:8000/classify', json = post_body, timeout=1000)
+        resp = requests.post(f'{API_HOST}/classify', json = post_body, timeout=10000)
         predicted_labels = resp.json()
         
         return html.Div([
                         html.Hr(),
                         html.H1('Prediction Results'),
                         dbc.Row(
-                        [  
+                        [
                             dbc.Card(dbc.CardBody(
                             dbc.Col(
                                 children=[
@@ -251,8 +253,7 @@ def get_classify_results(_, support_labels, support_images, query_images):
                             )))
                             for image_str, image_label in zip(query_images, list(predicted_labels.values())[0])
                         ], style={'display':'flex'})
-                ])
-        
+                ])    
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

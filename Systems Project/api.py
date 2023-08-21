@@ -95,7 +95,11 @@ def load_query_set_images_from_bytes(query_set_images_b64_strs):
 
     return query_set_images
 
-model = load_prototypical_network_checkpoint(MODEL_CHECKPOINT_PATH, send_to_device=False, map_location=torch.device('cpu'))
+model = load_prototypical_network_checkpoint(
+    MODEL_CHECKPOINT_PATH,
+    send_to_device=False,
+    map_location=torch.device('cpu')
+)
 app = FastAPI()
 
 @app.post("/classify")

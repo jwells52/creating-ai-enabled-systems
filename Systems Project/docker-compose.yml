@@ -3,11 +3,17 @@ version: '3.8'
 services:
   api:
     build: .
-    command: uvicorn api:app --host 0.0.0.0 --port 8000
+    command: uvicorn api:app --host '0.0.0.0' --port 8000
     ports:
-      - 8000:8000
+      - "8000:8000"
+    expose:
+      - 8000
   web:
     build: .
     command: python app.py
     ports:
-      - 8050:8050
+      - "8050:8050"
+    expose:
+      - 8050
+    environment:
+      - API_HOST=http://api:8000

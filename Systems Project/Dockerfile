@@ -1,5 +1,7 @@
+# Dockerfile for setting up environment for both web interface and REST API
+# They could be two seperate files however this is the easiest way to make sure both components will work
+# in a docker container
 FROM pytorch/pytorch
-
 
 WORKDIR /workspaces/
 
