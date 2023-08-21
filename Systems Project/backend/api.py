@@ -2,12 +2,10 @@
 FastAPI for model inference using Prototypical Networks
 '''
 import base64
-import torch
 import io
 import os
-import sys
+import torch
 import numpy as np
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from PIL import Image
@@ -17,7 +15,6 @@ from easyfsl.methods import PrototypicalNetworks
 from typing import List, Dict
 
 device = 'cpu'
-
 
 MODEL_CHECKPOINT_PATH = os.environ['MODEL_CHECKPOINT_PATH']
 

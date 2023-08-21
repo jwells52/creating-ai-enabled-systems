@@ -2,14 +2,16 @@ version: '3.8'
 
 services:
   api:
-    build: .
+    image: jwells52/creating-ai-enabled-systems:systemproject-api
+    build: backend/Dockerfile
     command: uvicorn api:app --host '0.0.0.0' --port 8000
     ports:
       - "8000:8000"
     expose:
       - 8000
   web:
-    build: .
+    image: jwells52/creating-ai-enabled-systems:systemproject-web
+    build: backend/Dockerfile
     command: python app.py
     ports:
       - "8050:8050"
